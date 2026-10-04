@@ -1,0 +1,16 @@
+{
+  "name": "Picnic Panic",
+  "short_name": "Picnic Panic",
+  "description": "Protect the sandwiches from 20 waves of ants, beetles and wasps.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "landscape",
+  "background_color": "#fbfcff",
+  "theme_color": "#e4492e",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

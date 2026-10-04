@@ -1,0 +1,32 @@
+name: Picnic Panic iOS build
+
+on:
+  push:
+    paths:
+      - "picnic-panic/**"
+      - ".github/workflows/picnic-panic-ios.yml"
+  pull_request:
+    paths:
+      - "picnic-panic/**"
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build for the iOS simulator (unsigned)
+        run: |
+          xcodebuild -version
+          xcodebuild build \
+            -project picnic-panic/ios/PicnicPanic.xcodeproj \
+            -target PicnicPanic \
+            -configuration Debug \
+            -sdk iphonesimulator \
+            CODE_SIGNING_ALLOWED=NO
+      - name: Check the game files made it into the app
+        run: |
+          APP=picnic-panic/ios/build/Debug-iphonesimulator/PicnicPanic.app
+          ls -la "$APP"
+          test -f "$APP/index.html"
+          test -f "$APP/fonts/bagel-fat-one.woff2"
