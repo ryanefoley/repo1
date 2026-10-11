@@ -1,0 +1,482 @@
+# Spot knowledge base — Santa Cruz County (+ Moss Landing).
+#
+# This file is where most of the app's accuracy comes from. v1 entries are from
+# general knowledge; Ryan's local corrections should replace them. Use the
+# `confidence` field (low / medium / high) to tell the model how much to trust
+# each entry, and bump it when you've verified it in the water.
+#
+# Field guide
+#   faces_deg        compass direction the break opens toward (open ocean side).
+#                    Offshore wind blows FROM faces_deg + 180.
+#   swell_window     FROM-directions of swell, degrees true.
+#     best_dir_deg   [lo, hi] clockwise arc where the spot lights up.
+#     ok_dir_deg     [lo, hi] arc where it still works, usually smaller/inconsistent.
+#     wrap_min_period_s  swell from the ok-but-not-best part of the window needs at
+#                        least this period to bend in. Short period just doesn't make it.
+#   size_range_ft    [min, max] face heights where it's surfable / holds.
+#   tide             best: low | low-mid | mid | mid-high | high | any
+#   wind.tolerates   free text about which winds it handles.
+#   forecast_point   north_coast | santa_cruz | south_county (see config.py)
+#   default          true = shown in the default (Lane) view.
+#   lat/lon          approximate.
+
+spots:
+  # ---------------------------------------------------------------- Steamer Lane
+  - id: lane-indicators
+    name: Indicators
+    region: westside
+    parent: Steamer Lane
+    default: true
+    lat: 36.9506
+    lon: -122.0287
+    forecast_point: santa_cruz
+    faces_deg: 200
+    swell_window: {best_dir_deg: [240, 300], ok_dir_deg: [190, 320], wrap_min_period_s: 10}
+    size_range_ft: [6, 15]
+    tide: {best: mid, notes: "Can get bumpy on big low tides."}
+    wind: {tolerates: "Light to moderate NW is side-offshore."}
+    bottom: reef
+    local_notes: >
+      Westernmost section of the Lane, outside and up toward Lighthouse Field.
+      Needs a decent-sized W/NW swell to break; long walling right that can run
+      toward the Point on bigger days. Asleep on small or S-only swells.
+    confidence: medium
+
+  - id: lane-middle-peak
+    name: Middle Peak
+    region: westside
+    parent: Steamer Lane
+    default: true
+    lat: 36.9500
+    lon: -122.0270
+    forecast_point: santa_cruz
+    faces_deg: 200
+    swell_window: {best_dir_deg: [245, 300], ok_dir_deg: [195, 320], wrap_min_period_s: 10}
+    size_range_ft: [8, 20]
+    tide: {best: any, notes: "Less tide-sensitive because it's deep and outside."}
+    wind: {tolerates: "Light to moderate NW."}
+    bottom: reef (deep, outside)
+    local_notes: >
+      Outside peak in front of the lighthouse. Only starts breaking with real size
+      (roughly 8 ft+ faces). Peaky; lefts and rights.
+    confidence: medium
+
+  - id: lane-point
+    name: The Point
+    region: westside
+    parent: Steamer Lane
+    default: true
+    lat: 36.9508
+    lon: -122.0258
+    forecast_point: santa_cruz
+    faces_deg: 200
+    swell_window: {best_dir_deg: [215, 300], ok_dir_deg: [165, 320], wrap_min_period_s: 10}
+    size_range_ft: [3, 15]
+    tide: {best: mid, notes: "Workable most tides; very low tide gets ledgy near the rocks."}
+    wind: {tolerates: "Light to moderate NW is side-offshore; sheltered compared with the North Coast."}
+    bottom: reef
+    local_notes: >
+      The most exposed part of the Lane to W/NW energy wrapping around the
+      lighthouse, so it works on the widest range of swells. On mid-period NW
+      (e.g. 11 s from 315°) it's often the only section really breaking because
+      that energy doesn't bend far enough to reach the bight.
+    confidence: medium
+
+  - id: lane-slot
+    name: The Slot (main peak)
+    region: westside
+    parent: Steamer Lane
+    default: true
+    lat: 36.9515
+    lon: -122.0250
+    forecast_point: santa_cruz
+    faces_deg: 185
+    swell_window: {best_dir_deg: [185, 260], ok_dir_deg: [165, 320], wrap_min_period_s: 11}
+    size_range_ft: [3, 8]
+    tide: {best: mid, notes: "TBD — Ryan."}
+    wind: {tolerates: "Light to moderate NW; tucked against the cliff."}
+    bottom: reef
+    local_notes: >
+      Inside of the Point, along the cliff. On NW swell the sets that do reach the
+      Slot all break on this main peak.
+    confidence: low
+
+  - id: lane-slot-second-peak
+    name: The Slot (second peak)
+    region: westside
+    parent: Steamer Lane
+    default: true
+    lat: 36.9520
+    lon: -122.0245
+    forecast_point: santa_cruz
+    faces_deg: 180
+    swell_window: {best_dir_deg: [180, 215], ok_dir_deg: [165, 230], wrap_min_period_s: 14}
+    size_range_ft: [3, 7]
+    tide: {best: mid, notes: "TBD — Ryan: does it show better on lower or higher tide?"}
+    wind: {tolerates: "Light to moderate NW."}
+    bottom: reef
+    local_notes: >
+      Ryan's observation: this peak only shows on a true S/SW swell. On NW or
+      mid-period swell, sets all break on the main Slot peak and the second peak
+      never forms. Tide may also matter (higher tide may keep energy together on
+      one peak) — unverified.
+    confidence: low
+
+  - id: cowells
+    name: Cowell's
+    region: westside
+    parent: Steamer Lane
+    default: true
+    lat: 36.9605
+    lon: -122.0230
+    forecast_point: santa_cruz
+    faces_deg: 175
+    swell_window: {best_dir_deg: [175, 225], ok_dir_deg: [165, 300], wrap_min_period_s: 15}
+    size_range_ft: [1, 5]
+    tide: {best: mid-high, notes: "Very low tide can make it mushy or too shallow on the inside."}
+    wind: {tolerates: "Very sheltered from NW."}
+    bottom: sand over reef
+    local_notes: >
+      Slow, mellow beginner/longboard wave deep in the bight. Needs S swell or a
+      big long-period W to wrap all the way in. Flat on most mid-period NW days.
+    confidence: medium
+
+  # ---------------------------------------------------------------- North Coast
+  - id: waddell
+    name: Waddell Creek
+    region: north_coast
+    default: false
+    lat: 37.0960
+    lon: -122.2780
+    forecast_point: north_coast
+    faces_deg: 235
+    swell_window: {best_dir_deg: [235, 300], ok_dir_deg: [190, 320], wrap_min_period_s: 8}
+    size_range_ft: [2, 6]
+    tide: {best: mid, notes: "Sandbar dependent."}
+    wind: {tolerates: "Needs glassy or light offshore; NW over ~10 kt blows it out (windsurf/kite spot)."}
+    bottom: sand
+    local_notes: >
+      Fully exposed beach break at the county line. Picks up everything; closes
+      out once it's overhead+. Usually a dawn-patrol spot before the NW wind.
+    confidence: medium
+
+  - id: scott-creek
+    name: Scott Creek
+    region: north_coast
+    default: false
+    lat: 37.0400
+    lon: -122.2310
+    forecast_point: north_coast
+    faces_deg: 230
+    swell_window: {best_dir_deg: [210, 295], ok_dir_deg: [185, 320], wrap_min_period_s: 8}
+    size_range_ft: [2, 7]
+    tide: {best: low-mid, notes: "Sandbar dependent."}
+    wind: {tolerates: "Exposed to NW; best early or on light/offshore days."}
+    bottom: sand with some reef
+    local_notes: >
+      Exposed beach break; picks up both W/NW and S. Gets big and closes out on
+      large NW swell.
+    confidence: medium
+
+  - id: davenport
+    name: Davenport Landing
+    region: north_coast
+    default: false
+    lat: 37.0250
+    lon: -122.2150
+    forecast_point: north_coast
+    faces_deg: 210
+    swell_window: {best_dir_deg: [220, 295], ok_dir_deg: [185, 315], wrap_min_period_s: 9}
+    size_range_ft: [2, 8]
+    tide: {best: mid, notes: ""}
+    wind: {tolerates: "A bit of protection from NW in the cove; still best light."}
+    bottom: reef and sand
+    local_notes: >
+      Small cove with some protection from the NW wind; reef/sand setup. Popular
+      with kiters when the wind's up.
+    confidence: low
+
+  - id: four-mile
+    name: Four Mile
+    region: north_coast
+    default: false
+    lat: 36.9660
+    lon: -122.1230
+    forecast_point: north_coast
+    faces_deg: 215
+    swell_window: {best_dir_deg: [255, 300], ok_dir_deg: [205, 315], wrap_min_period_s: 10}
+    size_range_ft: [3, 12]
+    tide: {best: mid, notes: "Low tide gets shallow on the inside."}
+    wind: {tolerates: "Exposed to NW; needs light wind or morning."}
+    bottom: reef
+    local_notes: >
+      Reef right point that likes W/NW swell; one of the better-quality North
+      Coast waves when wind is light. Long walk-in.
+    confidence: medium
+
+  - id: three-mile
+    name: Three Mile
+    region: north_coast
+    default: false
+    lat: 36.9620
+    lon: -122.1100
+    forecast_point: north_coast
+    faces_deg: 210
+    swell_window: {best_dir_deg: [245, 300], ok_dir_deg: [200, 315], wrap_min_period_s: 10}
+    size_range_ft: [2, 8]
+    tide: {best: mid, notes: ""}
+    wind: {tolerates: "Exposed to NW; best early."}
+    bottom: reef
+    local_notes: Reef peak near Four Mile; smaller and more forgiving.
+    confidence: low
+
+  - id: natural-bridges
+    name: Natural Bridges
+    region: westside
+    default: false
+    lat: 36.9510
+    lon: -122.0580
+    forecast_point: santa_cruz
+    faces_deg: 200
+    swell_window: {best_dir_deg: [230, 295], ok_dir_deg: [185, 310], wrap_min_period_s: 10}
+    size_range_ft: [2, 8]
+    tide: {best: low-mid, notes: ""}
+    wind: {tolerates: "Exposed to NW."}
+    bottom: reef
+    local_notes: Reef break at the state beach; lefts and rights; inconsistent.
+    confidence: low
+
+  # ---------------------------------------------------------------- Westside / town
+  - id: mitchells-cove
+    name: Mitchell's Cove
+    region: westside
+    default: false
+    lat: 36.9510
+    lon: -122.0430
+    forecast_point: santa_cruz
+    faces_deg: 190
+    swell_window: {best_dir_deg: [215, 290], ok_dir_deg: [180, 305], wrap_min_period_s: 12}
+    size_range_ft: [2, 6]
+    tide: {best: mid, notes: ""}
+    wind: {tolerates: "Fairly sheltered from NW."}
+    bottom: reef
+    local_notes: Shallow reef left in a small cove off West Cliff; needs some size to wrap in.
+    confidence: low
+
+  - id: its-beach
+    name: It's Beach
+    region: westside
+    default: false
+    lat: 36.9516
+    lon: -122.0295
+    forecast_point: santa_cruz
+    faces_deg: 195
+    swell_window: {best_dir_deg: [190, 270], ok_dir_deg: [170, 300], wrap_min_period_s: 12}
+    size_range_ft: [1, 5]
+    tide: {best: mid, notes: ""}
+    wind: {tolerates: "Fairly sheltered from NW."}
+    bottom: sand and reef
+    local_notes: Small beach/reef just west of Lighthouse Point; mellow, crowded.
+    confidence: low
+
+  # ---------------------------------------------------------------- Eastside
+  - id: rivermouth
+    name: San Lorenzo Rivermouth
+    region: eastside
+    default: false
+    lat: 36.9640
+    lon: -122.0125
+    forecast_point: santa_cruz
+    faces_deg: 180
+    swell_window: {best_dir_deg: [180, 260], ok_dir_deg: [165, 300], wrap_min_period_s: 13}
+    size_range_ft: [2, 8]
+    tide: {best: low-mid, notes: "Totally sand dependent; best after winter rains build the bar."}
+    wind: {tolerates: "Sheltered from NW."}
+    bottom: sand (river bar)
+    local_notes: Sandbar wave at the river mouth; can be excellent when the bar is good, nothing when it isn't.
+    confidence: low
+
+  - id: harbor-mouth
+    name: Harbor Mouth
+    region: eastside
+    default: false
+    lat: 36.9605
+    lon: -122.0020
+    forecast_point: santa_cruz
+    faces_deg: 180
+    swell_window: {best_dir_deg: [190, 280], ok_dir_deg: [170, 300], wrap_min_period_s: 14}
+    size_range_ft: [4, 12]
+    tide: {best: mid, notes: "Sand dependent."}
+    wind: {tolerates: "Sheltered from NW."}
+    bottom: sand
+    local_notes: Only breaks on big swell; heavy sandbar wave at the harbor entrance; watch boat traffic.
+    confidence: low
+
+  - id: 26th-ave
+    name: 26th Avenue
+    region: eastside
+    default: false
+    lat: 36.9605
+    lon: -121.9835
+    forecast_point: santa_cruz
+    faces_deg: 190
+    swell_window: {best_dir_deg: [180, 250], ok_dir_deg: [165, 295], wrap_min_period_s: 13}
+    size_range_ft: [2, 7]
+    tide: {best: low-mid, notes: ""}
+    wind: {tolerates: "Sheltered from NW."}
+    bottom: sand over reef
+    local_notes: Shifty beach/reef peaks; bodyboard and longboard friendly.
+    confidence: low
+
+  - id: sewer-peak
+    name: Sewer Peak
+    region: eastside
+    default: false
+    lat: 36.9580
+    lon: -121.9745
+    forecast_point: santa_cruz
+    faces_deg: 200
+    swell_window: {best_dir_deg: [185, 260], ok_dir_deg: [165, 300], wrap_min_period_s: 12}
+    size_range_ft: [2, 10]
+    tide: {best: low-mid, notes: ""}
+    wind: {tolerates: "Handles NW well (side-offshore)."}
+    bottom: reef
+    local_notes: Consistent reef peak at the west end of Pleasure Point; picks up more swell than the inside spots.
+    confidence: low
+
+  - id: pleasure-point
+    name: Pleasure Point (First / Second Peak)
+    region: eastside
+    default: false
+    lat: 36.9545
+    lon: -121.9700
+    forecast_point: santa_cruz
+    faces_deg: 200
+    swell_window: {best_dir_deg: [185, 240], ok_dir_deg: [165, 300], wrap_min_period_s: 12}
+    size_range_ft: [2, 10]
+    tide: {best: low-mid, notes: "High tide can get fat/slow."}
+    wind: {tolerates: "Handles NW well (side-offshore)."}
+    bottom: reef
+    local_notes: >
+      Classic Eastside reef with several peaks. Best on S/SW; winter W/NW wraps in
+      with enough period and size. Ryan surfs here often — his calls should
+      override these notes.
+    confidence: low
+
+  - id: the-hook
+    name: The Hook
+    region: eastside
+    default: false
+    lat: 36.9600
+    lon: -121.9625
+    forecast_point: santa_cruz
+    faces_deg: 175
+    swell_window: {best_dir_deg: [190, 270], ok_dir_deg: [170, 300], wrap_min_period_s: 13}
+    size_range_ft: [3, 10]
+    tide: {best: low-mid, notes: ""}
+    wind: {tolerates: "Sheltered from NW."}
+    bottom: reef
+    local_notes: Right reef break at 41st Ave; needs some size, especially from the W.
+    confidence: low
+
+  - id: privates
+    name: Privates
+    region: eastside
+    default: false
+    lat: 36.9640
+    lon: -121.9555
+    forecast_point: santa_cruz
+    faces_deg: 165
+    swell_window: {best_dir_deg: [170, 215], ok_dir_deg: [160, 290], wrap_min_period_s: 15}
+    size_range_ft: [2, 8]
+    tide: {best: mid, notes: ""}
+    wind: {tolerates: "Very sheltered from NW."}
+    bottom: sand and reef
+    local_notes: Beach/reef below Opal Cliffs; mainly a south-swell spot, needs big long-period W to wrap in.
+    confidence: low
+
+  - id: capitola
+    name: Capitola
+    region: eastside
+    default: false
+    lat: 36.9715
+    lon: -121.9520
+    forecast_point: santa_cruz
+    faces_deg: 170
+    swell_window: {best_dir_deg: [170, 215], ok_dir_deg: [160, 290], wrap_min_period_s: 15}
+    size_range_ft: [1, 6]
+    tide: {best: mid-high, notes: ""}
+    wind: {tolerates: "Very sheltered from NW."}
+    bottom: sand and reef
+    local_notes: Mellow beach/jetty waves; needs a solid S or a very big W to break.
+    confidence: low
+
+  # ---------------------------------------------------------------- South County
+  - id: seacliff-rio-del-mar
+    name: Seacliff / Rio Del Mar
+    region: south_county
+    default: false
+    lat: 36.9690
+    lon: -121.9100
+    forecast_point: south_county
+    faces_deg: 210
+    swell_window: {best_dir_deg: [205, 285], ok_dir_deg: [185, 300], wrap_min_period_s: 12}
+    size_range_ft: [2, 6]
+    tide: {best: mid, notes: "Sandbar dependent."}
+    wind: {tolerates: "Some shelter from NW; afternoon wind still affects it."}
+    bottom: sand
+    local_notes: Beach break peaks along the Aptos shoreline; softer than Manresa.
+    confidence: low
+
+  - id: manresa
+    name: Manresa
+    region: south_county
+    default: false
+    lat: 36.9330
+    lon: -121.8650
+    forecast_point: south_county
+    faces_deg: 245
+    swell_window: {best_dir_deg: [255, 305], ok_dir_deg: [215, 315], wrap_min_period_s: 9}
+    size_range_ft: [2, 8]
+    tide: {best: mid-high, notes: "Low tide tends to close out."}
+    wind: {tolerates: "NW is side-onshore; best early or with light E/offshore wind."}
+    bottom: sand
+    local_notes: >
+      Punchy, exposed beach break that faces into the bay mouth; picks up much
+      more W/NW than the town spots. S swells are mostly blocked by the
+      Monterey Peninsula.
+    confidence: medium
+
+  - id: sunset-state-beach
+    name: Sunset State Beach
+    region: south_county
+    default: false
+    lat: 36.8920
+    lon: -121.8350
+    forecast_point: south_county
+    faces_deg: 255
+    swell_window: {best_dir_deg: [260, 310], ok_dir_deg: [225, 320], wrap_min_period_s: 9}
+    size_range_ft: [2, 8]
+    tide: {best: mid, notes: ""}
+    wind: {tolerates: "NW is side-onshore; best early."}
+    bottom: sand
+    local_notes: Long exposed beach; heavy shorebreak when big; S swells mostly blocked.
+    confidence: low
+
+  - id: moss-landing
+    name: Moss Landing
+    region: south_county
+    default: false
+    lat: 36.8050
+    lon: -121.7900
+    forecast_point: south_county
+    faces_deg: 265
+    swell_window: {best_dir_deg: [265, 310], ok_dir_deg: [235, 320], wrap_min_period_s: 9}
+    size_range_ft: [3, 12]
+    tide: {best: mid, notes: ""}
+    wind: {tolerates: "NW is side-onshore; best early."}
+    bottom: sand (near the head of Monterey Canyon)
+    local_notes: >
+      Technically just over the line in Monterey County. The canyon head focuses
+      W/NW energy, so it's often bigger and heavier than nearby beaches.
+    confidence: medium

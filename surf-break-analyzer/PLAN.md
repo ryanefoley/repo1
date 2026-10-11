@@ -23,7 +23,7 @@ Answers "what will actually be breaking, where, and why" for a given day and tim
 ### Default set (Steamer Lane sections)
 | Section | Notes to encode |
 |---|---|
-| Indicators | Inside right off the cliff; small-to-mid swells; mid tide |
+| Indicators | Westernmost section, outside toward Lighthouse Field; needs a decent W/NW swell; long right |
 | Middle Peak | Needs size or W angle; A-frame-ish |
 | The Point | Most exposed to W/NW wrap at the lighthouse; works on the biggest range of swells |
 | The Slot — main peak | Inside of the Point |
@@ -44,6 +44,11 @@ South County (beach breaks, more exposed to W/NW, sensitive to sandbars):
 - Seacliff / Rio Del Mar, Manresa, Sunset State Beach, Moss Landing *(technically just over the line in Monterey County; included because Ryan asked)*
 
 > Ryan to review this list: add or remove breaks, and mark which ones he never wants shown.
+>
+> Built list (v1): North Coast — Waddell Creek, Scott Creek, Davenport Landing, Four Mile, Three Mile;
+> Westside — Natural Bridges, Mitchell's Cove, It's Beach, the Lane sections, Cowell's;
+> Eastside — Rivermouth, Harbor Mouth, 26th Ave, Sewer Peak, Pleasure Point, The Hook, Privates, Capitola;
+> South County — Seacliff/Rio Del Mar, Manresa, Sunset State Beach, Moss Landing.
 
 ### Spot knowledge base — `spots.yaml`
 This is where most of the value lives. One entry per spot or section:
@@ -155,19 +160,22 @@ Matches Ryan's existing stack (React + Vite, as in The Lane Report) with a thin 
 
 ```
 surf-break-analyzer/
-  PLAN.md
-  backend/            FastAPI
-    fetchers/         ndbc.py, cdip.py, openmeteo.py, tides.py
-    features.py       deterministic pre-pass
-    analyze.py        prompt assembly + Opus call + schema validation
-    spots.yaml
-    main.py           GET /analyze?date=&start=&end=&scope=lane|county
-  frontend/           React + Vite
-    date / time-window picker, "Lane only ↔ All county" toggle
-    spot cards (breaking / size / quality / why), raw-inputs drawer
-  cli.py              `python cli.py --date today --window 16-17 --scope lane`
-  evals/              see §6
-  .env.example
+  PLAN.md, README.md, .env.example
+  backend/
+    spots.yaml                 spot knowledge base
+    cli.py                     analyze / log / scorecard / spots
+    regression.py              rerun past days with the current prompt + spots
+    surfbreak/
+      fetchers/                ndbc.py, openmeteo.py, tides.py (+ cached http)
+      conditions.py            gather everything for a date + window
+      features.py              deterministic pre-pass
+      analyze.py               prompt, Opus call, validation, result cache
+      schema.py                structured-output schema
+      store.py, scorecard.py   predictions, session logs, accuracy
+      main.py                  FastAPI: /api/analyze, /api/sessions, /api/scorecard
+    tests/
+  frontend/                    React + Vite
+    src/components/            Controls, Dial, SpotRow, LogForm, InputsPanel, Scorecard
 ```
 
 The CLI comes first. It is the fastest way to tune prompts and the knowledge base before any UI exists.
@@ -197,7 +205,23 @@ Mobile-first layout, since this gets checked from the phone before paddling out.
 
 ---
 
-## 8. Open questions for Ryan
+## 8. Build status (2026-10-11)
+
+Milestones 1–6 are built; see README.md to run it. Decisions taken while the
+open questions below are pending:
+
+- Default view is the Lane sections only (Pleasure Point is one toggle away in the county view).
+- Local hosting (Vite dev server reachable from the phone on home wifi, or one uvicorn process after `npm run build`).
+- Standalone app; board picks from the quiver are left for later.
+- CDIP directional spectra aren't wired in yet. The NDBC `.spec` swell / wind-wave split and Open-Meteo's
+  swell partitions cover the "buried S swell" case for now.
+- Output schema uses `size_ft_low` / `size_ft_high` rather than a `[lo, hi]` array.
+
+Not yet verified: live fetches from NDBC, Open-Meteo and NOAA, and a live Opus call. The build
+environment had no route to those hosts and no API key, so everything was tested against
+recorded-style data and a fake model. Run `python cli.py --dry-run` first to confirm the live data path.
+
+## 9. Open questions for Ryan
 
 1. Should the default set be the Lane sections only, or the Lane plus Pleasure Point?
 2. Tide behavior of the Slot second peak: does it show better on lower or higher tide?

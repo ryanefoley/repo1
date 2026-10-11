@@ -1,0 +1,13 @@
+# Secrets — this repo is public
+.env
+
+# Your predictions and session logs stay local
+data/
+
+__pycache__/
+.pytest_cache/
+*.pyc
+.venv/
+
+frontend/node_modules/
+frontend/dist/
